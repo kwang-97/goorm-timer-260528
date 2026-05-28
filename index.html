@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber HUD Timer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 전체 타이머 앱을 감싸는 영역입니다. -->
+  <main class="timer-app">
+    <section class="hud-panel">
+      <div class="panel-header">
+        <span class="status-dot"></span>
+        <p>SYSTEM TIMER CONTROL</p>
+      </div>
+
+      <h1 class="glitch" data-text="CYBER TIMER">CYBER TIMER</h1>
+
+      <!-- MM:SS 형식으로 남은 시간이 표시됩니다. -->
+      <div class="time-display" id="timeDisplay">00:00</div>
+
+      <!-- 시간이 끝났을 때 보여줄 경고 메시지입니다. -->
+      <p class="warning-message" id="warningMessage">TIMEOUT ALERT</p>
+
+      <div class="input-grid">
+        <label>
+          MIN
+          <input type="number" id="minutesInput" min="0" value="0" placeholder="0">
+        </label>
+
+        <label>
+          SEC
+          <input type="number" id="secondsInput" min="0" max="59" value="30" placeholder="0">
+        </label>
+      </div>
+
+      <div class="button-row">
+        <button type="button" id="startBtn">START</button>
+        <button type="button" id="pauseBtn">PAUSE</button>
+        <button type="button" id="resetBtn">RESET</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
