@@ -1,0 +1,276 @@
+/* 기본 여백을 제거하고 전체 화면을 어두운 HUD 배경으로 만듭니다. */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Courier New", monospace;
+  color: #ecfbff;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 0, 170, 0.28), transparent 28%),
+    radial-gradient(circle at 82% 15%, rgba(0, 220, 255, 0.22), transparent 24%),
+    linear-gradient(135deg, #070817 0%, #101024 52%, #050611 100%);
+  overflow: hidden;
+}
+
+/* 얇은 스캔라인 배경 효과입니다. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.045) 0,
+    rgba(255, 255, 255, 0.045) 1px,
+    transparent 1px,
+    transparent 6px
+  );
+  mix-blend-mode: screen;
+  opacity: 0.45;
+}
+
+/* 타이머가 종료되었을 때 붉게 깜빡이는 화면 효과입니다. */
+body.alert {
+  animation: redFlash 0.45s infinite;
+}
+
+.timer-app {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.hud-panel {
+  position: relative;
+  width: min(100%, 520px);
+  padding: 28px;
+  border: 2px solid rgba(0, 232, 255, 0.72);
+  border-radius: 8px;
+  background: rgba(7, 10, 28, 0.82);
+  box-shadow:
+    0 0 22px rgba(0, 232, 255, 0.45),
+    inset 0 0 28px rgba(255, 0, 214, 0.16);
+  overflow: hidden;
+}
+
+/* 패널 안쪽의 대각선 HUD 장식선입니다. */
+.hud-panel::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(255, 0, 214, 0.38);
+  clip-path: polygon(0 0, 82% 0, 100% 18%, 100% 100%, 18% 100%, 0 82%);
+  pointer-events: none;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  color: #67f7ff;
+  font-size: 0.82rem;
+  letter-spacing: 2px;
+}
+
+.panel-header p {
+  margin: 0;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #00f0ff;
+  box-shadow: 0 0 14px #00f0ff;
+}
+
+.glitch {
+  position: relative;
+  margin: 0 0 18px;
+  color: #ffffff;
+  font-size: clamp(2rem, 8vw, 4.2rem);
+  line-height: 1;
+  text-align: center;
+  text-shadow:
+    0 0 8px #00e8ff,
+    3px 0 #ff2bd6,
+    -3px 0 #7c5cff;
+}
+
+/* 같은 글자를 겹쳐 짧게 흔들며 글리치 느낌을 냅니다. */
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  opacity: 0.75;
+}
+
+.glitch::before {
+  color: #00e8ff;
+  animation: glitchShift 1.8s infinite;
+}
+
+.glitch::after {
+  color: #ff2bd6;
+  animation: glitchShift 1.3s infinite reverse;
+}
+
+.time-display {
+  margin: 24px 0 18px;
+  padding: 18px 12px;
+  border: 1px solid rgba(103, 247, 255, 0.75);
+  border-radius: 6px;
+  color: #67f7ff;
+  font-size: clamp(3.4rem, 16vw, 6.5rem);
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  letter-spacing: 4px;
+  text-shadow: 0 0 18px rgba(103, 247, 255, 0.95);
+  background: rgba(0, 232, 255, 0.07);
+}
+
+.warning-message {
+  min-height: 24px;
+  margin: 0 0 22px;
+  color: #ff334d;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 3px;
+  opacity: 0;
+  text-shadow: 0 0 14px rgba(255, 51, 77, 0.95);
+}
+
+.warning-message.show {
+  opacity: 1;
+  animation: warningPulse 0.5s infinite;
+}
+
+.input-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+label {
+  display: grid;
+  gap: 8px;
+  color: #ff8df1;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+input {
+  width: 100%;
+  min-height: 54px;
+  border: 1px solid rgba(255, 43, 214, 0.72);
+  border-radius: 4px;
+  padding: 0 12px;
+  color: #ffffff;
+  font: inherit;
+  font-size: 1.4rem;
+  text-align: center;
+  background: rgba(255, 43, 214, 0.08);
+  box-shadow: inset 0 0 14px rgba(255, 43, 214, 0.18);
+  outline: none;
+}
+
+input:focus {
+  border-color: #00e8ff;
+  box-shadow: 0 0 16px rgba(0, 232, 255, 0.65);
+}
+
+.button-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+
+button {
+  min-height: 48px;
+  border: 1px solid #00e8ff;
+  border-radius: 4px;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  letter-spacing: 1px;
+  background: linear-gradient(135deg, rgba(0, 232, 255, 0.18), rgba(255, 43, 214, 0.2));
+  box-shadow: 0 0 14px rgba(0, 232, 255, 0.34);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  border-color: #ff2bd6;
+  box-shadow: 0 0 20px rgba(255, 43, 214, 0.55);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+@keyframes glitchShift {
+  0%, 100% {
+    transform: translate(0);
+    clip-path: inset(0 0 0 0);
+  }
+  20% {
+    transform: translate(-3px, 2px);
+    clip-path: inset(15% 0 55% 0);
+  }
+  40% {
+    transform: translate(3px, -2px);
+    clip-path: inset(60% 0 12% 0);
+  }
+  60% {
+    transform: translate(-2px, 1px);
+    clip-path: inset(35% 0 35% 0);
+  }
+}
+
+@keyframes warningPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes redFlash {
+  0%, 100% {
+    background-color: rgba(255, 0, 0, 0);
+  }
+  50% {
+    background-color: rgba(255, 0, 0, 0.42);
+  }
+}
+
+/* 모바일에서는 버튼과 입력칸을 세로로 배치해 터치하기 쉽게 만듭니다. */
+@media (max-width: 480px) {
+  .timer-app {
+    padding: 16px;
+  }
+
+  .hud-panel {
+    padding: 22px;
+  }
+
+  .input-grid,
+  .button-row {
+    grid-template-columns: 1fr;
+  }
+
+  .time-display {
+    letter-spacing: 2px;
+  }
+}
